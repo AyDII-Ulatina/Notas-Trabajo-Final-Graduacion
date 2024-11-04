@@ -1,4 +1,4 @@
-CREATE PROCEDURE SP_AGREGAR_PROFESOR
+CREATE OR ALTER PROCEDURE SP_AGREGAR_PROFESOR
     @Nombre NVARCHAR(255),
     @Tutor BIT,
     @Metodologo BIT,
@@ -54,9 +54,9 @@ BEGIN
         RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH
 END;
+GO
 
-
-CREATE PROCEDURE SP_AGREGAR_PROYECTO
+CREATE OR ALTER PROCEDURE SP_AGREGAR_PROYECTO
     @NOMBRE_PROYECTO NVARCHAR(255),
     @NOMBRE_ESTUDIANTE NVARCHAR(255),
     @CEDULA_ESTUDIANTE NVARCHAR(20),
@@ -118,3 +118,41 @@ BEGIN
         RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH
 END;
+GO
+
+CREATE OR ALTER PROCEDURE SP_PROYECTOS_PENDIENTES
+AS
+BEGIN
+    SELECT *
+    FROM Proyecto
+    WHERE IdEstado = 3;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE SP_PROYECTOS_FINALIZADO
+AS
+BEGIN
+    SELECT *
+    FROM Proyecto
+    WHERE IdEstado = 4;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE SP_OBTENER_PROFESORES_ACTIVOS
+AS
+BEGIN
+    SELECT p.IdProfesor, p.Nombre, 'Tutor' AS Rol
+    FROM Proyecto pr
+    INNER JOIN Profesor p ON pr.IdProfesor_Tutor = p.IdProfesor
+    INNER JOIN ProfesorRol prl ON p.IdProfesor = prl.IdProfesor
+    WHERE prl.IdRol = 1 AND prl.IdEstado = 1
+
+    UNION
+
+    SELECT p.IdProfesor, p.Nombre, 'Metodologo' AS Rol
+    FROM Proyecto pr
+    INNER JOIN Profesor p ON pr.IdProfesor_Metodologo = p.IdProfesor
+    INNER JOIN ProfesorRol prl ON p.IdProfesor = prl.IdProfesor
+    WHERE prl.IdRol = 2 AND prl.IdEstado = 1;
+END;
+GO
