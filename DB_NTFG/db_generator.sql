@@ -1,3 +1,9 @@
+CREATE DATABASE DB_NTFG
+GO
+
+USE DB_NTFG
+GO
+
 CREATE TABLE Estado (
     IdEstado INT IDENTITY(1,1) PRIMARY KEY,
     Descripcion NVARCHAR(100) NOT NULL
@@ -27,7 +33,7 @@ CREATE TABLE Estudiante (
 CREATE TABLE Proyecto (
     IdProyecto INT IDENTITY(1,1) PRIMARY KEY,
     Nombre NVARCHAR(255) NOT NULL,
-    Fecha DATE NOT NULL,
+    Fecha DATE NULL,
     IdProfesor_Tutor INT,
     IdProfesor_Metodologo INT,
     IdEstado INT,
@@ -66,3 +72,13 @@ CREATE TABLE ProfesorRol (
     FOREIGN KEY (IdProfesor) REFERENCES Profesor(IdProfesor),
     FOREIGN KEY (IdEstado) REFERENCES Estado(IdEstado)
 );
+
+
+-- GENERAR DATOS PREVIAMENTE REQUERIDOS
+
+INSERT INTO Estado (Descripcion)
+VALUES 
+    ('Activo'),
+    ('Inactivo'),
+    ('Pendiente'),
+    ('Finalizado');
