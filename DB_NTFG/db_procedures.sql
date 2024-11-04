@@ -419,3 +419,81 @@ BEGIN
     END CATCH
 END;
 GO
+
+CREATE OR ALTER PROCEDURE SP_OBTENER_RUBROS
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdRubro,
+        Descripcion,
+        IdCategoria,
+        IdEstado
+    FROM Rubro
+END;
+GO
+
+CREATE OR ALTER PROCEDURE SP_OBTENER_RUBROS_ACTIVOS
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdRubro,
+        Descripcion,
+        IdCategoria,
+        IdEstado
+    FROM Rubro
+    WHERE IdEstado = 1;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE SP_ELIMINAR_RUBRO
+    @ID_RUBRO INT,
+    @RESULTADO BIT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM Rubro WHERE IdRubro = @ID_RUBRO)
+        BEGIN
+            SET @RESULTADO = 0;
+            ROLLBACK TRANSACTION;
+            THROW 50010, 'El rubro especificado no existe.', 1;
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM RegistroDeNotas WHERE IdRubro = @ID_RUBRO)
+        BEGIN
+            SET @RESULTADO = 0;
+            ROLLBACK TRANSACTION;
+            THROW 50011, 'El rubro no se puede eliminar porque existen registros asociados en la tabla RegistroDeNotas.', 1;
+            RETURN;
+        END
+        DELETE FROM Rubro
+        WHERE IdRubro = @ID_RUBRO;
+
+        SET @RESULTADO = 1; 
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+
+        SET @RESULTADO = 0;
+
+        DECLARE @ERROR_MESSAGE NVARCHAR(4000);
+        DECLARE @ERROR_SEVERITY INT;
+        DECLARE @ERROR_STATE INT;
+
+        SELECT 
+            @ERROR_MESSAGE = ERROR_MESSAGE(),
+            @ERROR_SEVERITY = ERROR_SEVERITY(),
+            @ERROR_STATE = ERROR_STATE();
+
+        RAISERROR (@ERROR_MESSAGE, @ERROR_SEVERITY, @ERROR_STATE);
+    END CATCH
+END;
+GO
