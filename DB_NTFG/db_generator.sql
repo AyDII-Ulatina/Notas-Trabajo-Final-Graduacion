@@ -66,3 +66,13 @@ CREATE TABLE ProfesorRol (
     FOREIGN KEY (IdProfesor) REFERENCES Profesor(IdProfesor),
     FOREIGN KEY (IdEstado) REFERENCES Estado(IdEstado)
 );
+
+
+-- GENERAR DATOS PREVIAMENTE REQUERIDOS
+
+INSERT INTO Estado (Descripcion)
+VALUES 
+    ('Activo'),
+    ('Inactivo'),
+    ('Pendiente'),
+    ('Finalizado');
