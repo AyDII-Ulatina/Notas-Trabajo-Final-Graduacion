@@ -497,3 +497,119 @@ BEGIN
     END CATCH
 END;
 GO
+
+CREATE OR ALTER PROCEDURE SP_EDITAR_RUBRO
+    @ID_RUBRO INT,
+    @NUEVA_DESCRIPCION NVARCHAR(255),
+    @NUEVA_CATEGORIA INT,
+    @RESULTADO BIT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM Rubro WHERE IdRubro = @ID_RUBRO)
+        BEGIN
+            SET @RESULTADO = 0;
+            THROW 50012, 'El rubro especificado no existe.', 1;
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM RegistroDeNotas WHERE IdRubro = @ID_RUBRO)
+        BEGIN
+            SET @RESULTADO = 0;
+            THROW 50013, 'El rubro no se puede editar porque existen registros asociados en la tabla RegistroDeNotas.', 1;
+            RETURN;
+        END
+
+        BEGIN TRANSACTION;
+
+        IF @NUEVA_DESCRIPCION IS NOT NULL
+        BEGIN
+            UPDATE Rubro
+            SET Descripcion = @NUEVA_DESCRIPCION
+            WHERE IdRubro = @ID_RUBRO;
+        END
+
+        IF @NUEVA_CATEGORIA IS NOT NULL
+        BEGIN
+            IF NOT EXISTS (SELECT 1 FROM Categoria WHERE IdCategoria = @NUEVA_CATEGORIA)
+            BEGIN
+                SET @RESULTADO = 0;
+                ROLLBACK TRANSACTION;
+                THROW 50014, 'La categoría especificada no existe.', 1;
+                RETURN;
+            END
+
+            UPDATE Rubro
+            SET IdCategoria = @NUEVA_CATEGORIA
+            WHERE IdRubro = @ID_RUBRO;
+        END
+
+        SET @RESULTADO = 1;  
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+       ROLLBACK;
+
+        SET @RESULTADO = 0;
+
+        DECLARE @ERROR_MESSAGE NVARCHAR(4000);
+        DECLARE @ERROR_SEVERITY INT;
+        DECLARE @ERROR_STATE INT;
+
+        SELECT 
+            @ERROR_MESSAGE = ERROR_MESSAGE(),
+            @ERROR_SEVERITY = ERROR_SEVERITY(),
+            @ERROR_STATE = ERROR_STATE();
+
+        RAISERROR (@ERROR_MESSAGE, @ERROR_SEVERITY, @ERROR_STATE);
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE SP_CAMBIAR_ESTADO_RUBRO
+    @ID_RUBRO INT,
+    @NUEVO_ESTADO INT,
+    @RESULTADO BIT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM Rubro WHERE IdRubro = @ID_RUBRO)
+        BEGIN
+            SET @RESULTADO = 0;
+            THROW 50015, 'El rubro especificado no existe.', 1;
+            RETURN;
+        END
+
+        BEGIN TRANSACTION;
+
+        UPDATE Rubro
+        SET IdEstado = @NUEVO_ESTADO
+        WHERE IdRubro = @ID_RUBRO;
+
+        SET @RESULTADO = 1;  
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK;
+
+        SET @RESULTADO = 0;
+
+        DECLARE @ERROR_MESSAGE NVARCHAR(4000);
+        DECLARE @ERROR_SEVERITY INT;
+        DECLARE @ERROR_STATE INT;
+
+        SELECT 
+            @ERROR_MESSAGE = ERROR_MESSAGE(),
+            @ERROR_SEVERITY = ERROR_SEVERITY(),
+            @ERROR_STATE = ERROR_STATE();
+
+        RAISERROR (@ERROR_MESSAGE, @ERROR_SEVERITY, @ERROR_STATE);
+    END CATCH
+END;
+GO
+
