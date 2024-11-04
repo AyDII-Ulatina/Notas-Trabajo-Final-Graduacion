@@ -27,7 +27,7 @@ CREATE TABLE Estudiante (
 CREATE TABLE Proyecto (
     IdProyecto INT IDENTITY(1,1) PRIMARY KEY,
     Nombre NVARCHAR(255) NOT NULL,
-    Fecha DATE NOT NULL,
+    Fecha DATE NULL,
     IdProfesor_Tutor INT,
     IdProfesor_Metodologo INT,
     IdEstado INT,
