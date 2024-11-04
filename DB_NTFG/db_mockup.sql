@@ -28,8 +28,8 @@ VALUES
 -- Inserción de datos en la tabla Proyecto
 INSERT INTO Proyecto (Nombre, Fecha, IdProfesor_Tutor, IdProfesor_Metodologo, IdEstado, IdEstudiante)
 VALUES 
-    ('Proyecto A', '2024-11-01', 1, 2, 1, 1),
-    ('Proyecto B', '2024-11-02', 2, 3, 2, 2),
+    ('Proyecto A', '2024-11-01', 1, 2, 4, 1),
+    ('Proyecto B', '2024-11-02', 2, 3, 3, 2),
     ('Proyecto C', '2024-11-03', 1, 3, 3, 3);
 
 -- Inserción de datos en la tabla Rubro
