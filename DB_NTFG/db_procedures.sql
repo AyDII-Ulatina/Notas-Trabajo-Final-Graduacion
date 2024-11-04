@@ -279,3 +279,91 @@ BEGIN
     END CATCH
 END;
 GO
+
+CREATE OR ALTER PROCEDURE SP_EDITAR_PROYECTO
+    @ID_PROYECTO INT,
+    @NUEVO_NOMBRE_PROYECTO NVARCHAR(255) = NULL,
+    @NUEVO_ID_TUTOR INT = NULL,
+    @NUEVO_ID_METODOLOGO INT = NULL,
+    @NUEVO_NOMBRE_ESTUDIANTE NVARCHAR(255) = NULL,
+    @NUEVA_CEDULA_ESTUDIANTE NVARCHAR(20) = NULL,
+    @RESULTADO BIT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM Proyecto WHERE IdProyecto = @ID_PROYECTO AND IdEstado = 3)
+        BEGIN
+            SET @RESULTADO = 0;
+            ROLLBACK TRANSACTION;
+            THROW 50007, 'El proyecto con el ID especificado no existe o no está en estado pendiente.', 1;
+            RETURN;
+        END
+
+        IF @NUEVO_NOMBRE_PROYECTO IS NOT NULL
+        BEGIN
+            UPDATE Proyecto
+            SET Nombre = @NUEVO_NOMBRE_PROYECTO
+            WHERE IdProyecto = @ID_PROYECTO;
+        END
+
+        IF @NUEVO_ID_TUTOR IS NOT NULL
+        BEGIN
+            UPDATE Proyecto
+            SET IdProfesor_Tutor = @NUEVO_ID_TUTOR
+            WHERE IdProyecto = @ID_PROYECTO;
+        END
+
+        IF @NUEVO_ID_METODOLOGO IS NOT NULL
+        BEGIN
+            UPDATE Proyecto
+            SET IdProfesor_Metodologo = @NUEVO_ID_METODOLOGO
+            WHERE IdProyecto = @ID_PROYECTO;
+        END
+
+        DECLARE @ID_ESTUDIANTE INT;
+
+        SELECT @ID_ESTUDIANTE = IdEstudiante
+        FROM Proyecto
+        WHERE IdProyecto = @ID_PROYECTO;
+
+        IF @ID_ESTUDIANTE IS NOT NULL
+        BEGIN
+            IF @NUEVO_NOMBRE_ESTUDIANTE IS NOT NULL
+            BEGIN
+                UPDATE Estudiante
+                SET Nombre = @NUEVO_NOMBRE_ESTUDIANTE
+                WHERE IdEstudiante = @ID_ESTUDIANTE;
+            END
+
+            IF @NUEVA_CEDULA_ESTUDIANTE IS NOT NULL
+            BEGIN
+                UPDATE Estudiante
+                SET Cedula = @NUEVA_CEDULA_ESTUDIANTE
+                WHERE IdEstudiante = @ID_ESTUDIANTE;
+            END
+        END
+
+        SET @RESULTADO = 1;  
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+
+        SET @RESULTADO = 0;
+
+        DECLARE @ERROR_MESSAGE NVARCHAR(4000);
+        DECLARE @ERROR_SEVERITY INT;
+        DECLARE @ERROR_STATE INT;
+
+        SELECT 
+            @ERROR_MESSAGE = ERROR_MESSAGE(),
+            @ERROR_SEVERITY = ERROR_SEVERITY(),
+            @ERROR_STATE = ERROR_STATE();
+
+        RAISERROR (@ERROR_MESSAGE, @ERROR_SEVERITY, @ERROR_STATE);
+    END CATCH
+END;
+GO
