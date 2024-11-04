@@ -367,3 +367,55 @@ BEGIN
     END CATCH
 END;
 GO
+
+CREATE OR ALTER PROCEDURE SP_AGREGAR_RUBRO
+    @DESCRIPCION NVARCHAR(255),
+    @ID_CATEGORIA INT,
+    @ID_ESTADO INT,
+    @RESULTADO BIT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM Categoria WHERE IdCategoria = @ID_CATEGORIA)
+        BEGIN
+            SET @RESULTADO = 0;
+            ROLLBACK TRANSACTION;
+            THROW 50008, 'La categoría especificada no existe.', 1;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM Estado WHERE IdEstado = @ID_ESTADO)
+        BEGIN
+            SET @RESULTADO = 0;
+            ROLLBACK TRANSACTION;
+            THROW 50009, 'El estado especificado no existe.', 1;
+            RETURN;
+        END
+
+        INSERT INTO Rubro (Descripcion, IdCategoria, IdEstado)
+        VALUES (@DESCRIPCION, @ID_CATEGORIA, @ID_ESTADO);
+
+        SET @RESULTADO = 1;  
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+
+        SET @RESULTADO = 0;
+
+        DECLARE @ERROR_MESSAGE NVARCHAR(4000);
+        DECLARE @ERROR_SEVERITY INT;
+        DECLARE @ERROR_STATE INT;
+
+        SELECT 
+            @ERROR_MESSAGE = ERROR_MESSAGE(),
+            @ERROR_SEVERITY = ERROR_SEVERITY(),
+            @ERROR_STATE = ERROR_STATE();
+
+        RAISERROR (@ERROR_MESSAGE, @ERROR_SEVERITY, @ERROR_STATE);
+    END CATCH
+END;
+GO
