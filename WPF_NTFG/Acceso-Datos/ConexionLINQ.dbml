@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_NTFG" Class="ConexionLINQDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=(localdb)\BrandonZ;Initial Catalog=DB_NTFG;Integrated Security=True" SettingsObjectName="WPF_NTFG.Properties.Settings" SettingsPropertyName="DB_NTFGConnectionString" Provider="System.Data.SqlClient" />
+  <Function Name="dbo.ObtenerTutoresYMetodologos" Method="ObtenerTutoresYMetodologos">
+    <ElementType Name="ObtenerTutoresYMetodologosResult">
+      <Column Name="IdProfesor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Rol" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_PROYECTOS_PENDIENTES" Method="SP_PROYECTOS_PENDIENTES">
+    <ElementType Name="SP_PROYECTOS_PENDIENTESResult">
+      <Column Name="ID_PROYECTO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NOMBRE_PROYECTO" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="FECHA" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="NOMBRE_TUTOR" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NOMBRE_METODOLOGO" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NOMBRE_ESTUDIANTE" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_AGREGAR_PROFESOR" Method="SP_AGREGAR_PROFESOR">
+    <Parameter Name="Nombre" Parameter="nombre" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="Tutor" Parameter="tutor" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="Metodologo" Parameter="metodologo" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="RESULTADO" Parameter="rESULTADO" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_AGREGAR_PROYECTO" Method="SP_AGREGAR_PROYECTO">
+    <Parameter Name="NOMBRE_PROYECTO" Parameter="nOMBRE_PROYECTO" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="NOMBRE_ESTUDIANTE" Parameter="nOMBRE_ESTUDIANTE" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="CEDULA_ESTUDIANTE" Parameter="cEDULA_ESTUDIANTE" Type="System.String" DbType="NVarChar(20)" />
+    <Parameter Name="NOMBRE_METODOLOGO" Parameter="nOMBRE_METODOLOGO" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="NOMBRE_TUTOR" Parameter="nOMBRE_TUTOR" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="RESULTADO" Parameter="rESULTADO" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_AGREGAR_RUBRO" Method="SP_AGREGAR_RUBRO">
+    <Parameter Name="DESCRIPCION" Parameter="dESCRIPCION" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="ID_CATEGORIA" Parameter="iD_CATEGORIA" Type="System.Int32" DbType="Int" />
+    <Parameter Name="ID_ESTADO" Parameter="iD_ESTADO" Type="System.Int32" DbType="Int" />
+    <Parameter Name="RESULTADO" Parameter="rESULTADO" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_CAMBIAR_ESTADO_RUBRO" Method="SP_CAMBIAR_ESTADO_RUBRO">
+    <Parameter Name="ID_RUBRO" Parameter="iD_RUBRO" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NUEVO_ESTADO" Parameter="nUEVO_ESTADO" Type="System.Int32" DbType="Int" />
+    <Parameter Name="RESULTADO" Parameter="rESULTADO" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_EDITAR_PROFESOR" Method="SP_EDITAR_PROFESOR">
+    <Parameter Name="ID_PROFESOR" Parameter="iD_PROFESOR" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NUEVO_NOMBRE" Parameter="nUEVO_NOMBRE" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="NUEVO_ESTADO_TUTOR" Parameter="nUEVO_ESTADO_TUTOR" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NUEVO_ESTADO_METODOLOGO" Parameter="nUEVO_ESTADO_METODOLOGO" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_EDITAR_PROYECTO" Method="SP_EDITAR_PROYECTO">
+    <Parameter Name="ID_PROYECTO" Parameter="iD_PROYECTO" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NUEVO_NOMBRE_PROYECTO" Parameter="nUEVO_NOMBRE_PROYECTO" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="NUEVO_ID_TUTOR" Parameter="nUEVO_ID_TUTOR" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NUEVO_ID_METODOLOGO" Parameter="nUEVO_ID_METODOLOGO" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NUEVO_NOMBRE_ESTUDIANTE" Parameter="nUEVO_NOMBRE_ESTUDIANTE" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="NUEVA_CEDULA_ESTUDIANTE" Parameter="nUEVA_CEDULA_ESTUDIANTE" Type="System.String" DbType="NVarChar(20)" />
+    <Parameter Name="RESULTADO" Parameter="rESULTADO" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_EDITAR_RUBRO" Method="SP_EDITAR_RUBRO">
+    <Parameter Name="ID_RUBRO" Parameter="iD_RUBRO" Type="System.Int32" DbType="Int" />
+    <Parameter Name="NUEVA_DESCRIPCION" Parameter="nUEVA_DESCRIPCION" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="NUEVA_CATEGORIA" Parameter="nUEVA_CATEGORIA" Type="System.Int32" DbType="Int" />
+    <Parameter Name="RESULTADO" Parameter="rESULTADO" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_ELIMINAR_RUBRO" Method="SP_ELIMINAR_RUBRO">
+    <Parameter Name="ID_RUBRO" Parameter="iD_RUBRO" Type="System.Int32" DbType="Int" />
+    <Parameter Name="RESULTADO" Parameter="rESULTADO" Type="System.Boolean" DbType="Bit" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.SP_OBTENER_ESTADO_PROFESORES" Method="SP_OBTENER_ESTADO_PROFESORES">
+    <ElementType Name="SP_OBTENER_ESTADO_PROFESORESResult">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NOMBRE" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="ESTADO" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_OBTENER_PROFESORES_ACTIVOS" Method="SP_OBTENER_PROFESORES_ACTIVOS">
+    <ElementType Name="SP_OBTENER_PROFESORES_ACTIVOSResult">
+      <Column Name="IdProfesor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Tutor" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Metodologo" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_OBTENER_RUBROS" Method="SP_OBTENER_RUBROS">
+    <ElementType Name="SP_OBTENER_RUBROSResult">
+      <Column Name="IdRubro" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="IdCategoria" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEstado" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_OBTENER_RUBROS_ACTIVOS" Method="SP_OBTENER_RUBROS_ACTIVOS">
+    <ElementType Name="SP_OBTENER_RUBROS_ACTIVOSResult">
+      <Column Name="IdRubro" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="IdCategoria" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEstado" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_PROYECTOS_FINALIZADO" Method="SP_PROYECTOS_FINALIZADO">
+    <ElementType Name="SP_PROYECTOS_FINALIZADOResult">
+      <Column Name="IdProyecto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Fecha" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="IdProfesor_Tutor" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdProfesor_Metodologo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEstado" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEstudiante" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.SP_PROYECTOS_FINALIZADOS" Method="SP_PROYECTOS_FINALIZADOS">
+    <ElementType Name="SP_PROYECTOS_FINALIZADOSResult">
+      <Column Name="ID_PROYECTO" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NOMBRE_PROYECTO" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="FECHA" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="NOMBRE_TUTOR" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NOMBRE_METODOLOGO" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NOMBRE_ESTUDIANTE" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+</Database>
